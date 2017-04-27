@@ -27,11 +27,15 @@ set_os_settings() {
 
 set_vim() {
     vim_file=".vimrc"
+    indexer_file=".indexer_files"
     vim_dir=".vim"
+    snips_dir="${vim_dir}/UltiSnips"
     ln -s ${file_path}/vimrc ${vim_file}
     mkdir -p ${vim_dir}/bundle
     git clone https://github.com/gmarik/vundle.git .vim/bundle/vundle
     vim +PluginInstall +qall
+    ln -s ${file_path}/indexer_files ${indexer_file}
+    ln -s ../${file_path}/UltiSnips ${snips_dir}
     echo "set vim: ${vim_file} ${vim_dir}/"
 }
 

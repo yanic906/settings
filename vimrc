@@ -21,7 +21,6 @@ Bundle 'gmarik/vundle'
 """ Plugins
 Bundle 'altercation/vim-colors-solarized'
 Bundle 'derekwyatt/vim-fswitch'
-Bundle 'derekwyatt/vim-protodef'
 Bundle 'dyng/ctrlsf.vim'
 Bundle 'easymotion/vim-easymotion'
 Bundle 'fholgado/minibufexpl.vim'
@@ -30,7 +29,6 @@ Bundle 'kshenoy/vim-signature'
 Bundle 'Lokaltog/vim-powerline'
 Bundle 'majutsushi/tagbar'
 Bundle 'nathanaelkane/vim-indent-guides'
-Bundle 'octol/vim-cpp-enhanced-highlight'
 Bundle 'scrooloose/nerdtree'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'SirVer/ultisnips'
@@ -57,10 +55,8 @@ set number
 
 """ cursor
 set cursorline
-"set cursorcolumn
 set backspace=indent,eol,start
 set whichwrap=b,s
-":autocmd InsertEnter,InsertLeave * set cul!
 
 """ line wrap
 set wrap
@@ -95,7 +91,6 @@ inoremap [ []<ESC>i
 
 """ misc
 set wildmenu
-set spell " z= correct, ]s next
 set showcmd
 
 """ folder
@@ -106,6 +101,10 @@ nnoremap <c-j> <c-w><c-j>
 nnoremap <c-k> <c-w><c-k>
 nnoremap <c-h> <c-w><c-h>
 nnoremap <c-l> <c-w><c-l>
+
+""" quickfix
+nmap <silent> <leader>qo :copen<cr>
+nmap <silent> <leader>qc :cclose<cr>
 
 """ tags & new-omni-completion
 " 1. download source code (at least header files)
@@ -125,6 +124,11 @@ nmap <leader>x :wa<cr>:make<cr><cr>:cw<cr>
 """ session
 "TODO
 
+"""""" not used
+"set cursorcolumn
+":autocmd InsertEnter,InsertLeave * set cul!
+"set spell " z= correct, ]s next
+
 
 """""" Plugin Settings """""""""""""""""""""""""""""""""
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -142,20 +146,23 @@ colorscheme solarized
 """ vim-fswitch
 nmap <silent> <leader>sw :FSHere<cr>
 
-""" vim-protodef
-" <leader>PP : make all prototype
-let g:protodefprotogetter='~/.vim/bundle/vim-protodef/pullproto.pl'
-let g:disable_protodef_sorting=1
-
 """ ctrlsf.vim
-nnoremap <leader>sp :CtrlSF<cr>
+nnoremap <leader>ss :CtrlSFQuickfix<cr>
+nnoremap <leader>so :CtrlSFOpen<cr>
+nnoremap <leader>st :CtrlSFToggle<cr>
 
 """ vim-easymotion
-" <leader><leader>fa
+" <leader><leader>w/b
+" <leader><leader>s/f/t
+" <leader><leader>j/k
+let g:EasyMotion_smartcase = 1
+map <Leader><leader>h <Plug>(easymotion-linebackward)
+map <Leader><leader>l <Plug>(easymotion-lineforward)
+map <Leader><leader>. <Plug>(easymotion-repeat)
 
 """ minibufexpl.vim
-map <leader>w :MBEbn<cr>
-map <leader>p :MBEbp<cr>
+noremap <C-n> :MBEbn<cr>
+noremap <C-p> :MBEbp<cr>
 
 """ vim-snippets
 " for ultisnips
@@ -189,53 +196,16 @@ map <leader>p :MBEbp<cr>
 let g:Powerline_colorscheme='solarized256'
 
 """ tagbar
+nnoremap <Leader>b :TagbarToggle<CR>
 let tagbar_left=1
 let tagbar_width=32
 let tagbar_compact=1
-let g:tagbar_type_cpp = {
-    \ 'ctagstype' : 'c++',
-    \ 'kinds' : [
-         \ 'd:macros:0:1',
-         \ 'p:functions_prototypes:0:1',
-         \ 'g:enumeration:0:1',
-         \ 'e:enumerators:0:0', 
-         \ 't:typedefs:0:1',
-         \ 'n:namespaces:0:1',
-         \ 'c:classes:0:1',
-         \ 's:structs:0:1',
-         \ 'u:unions:0:1',
-         \ 'f:functions:0:1',
-         \ 'm:members:0:1',
-         \ 'v:global:0:1',
-         \ 'l:local:0:1',
-         \ 'x:external:0:1'
-     \ ],
-     \ 'sro'        : '::',
-     \ 'kind2scope' : {
-         \ 'g' : 'enum',
-         \ 'n' : 'namespace',
-         \ 'c' : 'class',
-         \ 's' : 'struct',
-         \ 'u' : 'union'
-     \ },
-     \ 'scope2kind' : {
-         \ 'enum'      : 'g',
-         \ 'namespace' : 'n',
-         \ 'class'     : 'c',
-         \ 'struct'    : 's',
-         \ 'union'     : 'u'
-    \ }
-\ }
 
 """ vim-indent-guides
 let g:indent_guides_enable_on_vim_startup=1
 let g:indent_guides_start_level=2
 let g:indent_guides_guide_size=1
-":nmap <silent> <leader>i <Plug>IndentGuidesToggle
-
-""" vim-cpp-enhanced-highlight
-" ex. for highlight initializer_list,
-"     add "syntax keyword cppSTLtype initializer_list" in cpp.vim
+nmap <silent> <leader>i <Plug>IndentGuidesToggle
 
 """ nerdtree
 let NERDTreeWinSize=32
@@ -246,21 +216,24 @@ let NERDTreeAutoDeleteBuffer=1
 
 """ nerdcommenter
 " <leader>cc : comment
+" <leader>cm : comment
+" <leader>cs : comment
 " <leader>cu : uncomment
+let g:NERDAltDelims_c = 1
 
 """ ultisnips
 " Note: choosing snippets by priority
-let g:UltiSnipsExpandTrigger="<c-j>"
-let g:UltiSnipsJumpForwardTrigger="<tab>"
-let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
+let g:UltiSnipsExpandTrigger="<leader><tab>"
+let g:UltiSnipsJumpForwardTrigger="<leader><tab>"
+let g:UltiSnipsJumpBackwardTrigger="<leader><s-tab>"
 
 """ YouCompleteMe
 " Engine: YCM: files in buffer OR keyin '.', '->', '::'
 "         tags: need enable AND tags
 "         OmniCppComplete: include header file AND shortcut key ^x^o
 " color
-highlight Pmenu ctermfg=2 ctermbg=3 guifg=#005f87 guibg=#EEE8D5
-highlight PmenuSel ctermfg=2 ctermbg=3 guifg=#AFD700 guibg=#106900
+"highlight Pmenu ctermfg=2 ctermbg=3 guifg=#005f87 guibg=#EEE8D5
+"highlight PmenuSel ctermfg=2 ctermbg=3 guifg=#AFD700 guibg=#106900
 " about comment
 let g:ycm_complete_in_comments=1
 "" auto load .ycm_extra_conf.py
@@ -278,7 +251,7 @@ let g:ycm_min_num_of_chars_for_completion=1
 let g:ycm_cache_omnifunc=0
 " keyword
 let g:ycm_seed_identifiers_with_syntax=1
-" used in include or opened files 
+" used in include or opened files
 "nnoremap <leader>jc :YcmCompleter GoToDeclaration<cr>
 "nnoremap <leader>jd :YcmCompleter GoToDefinition<cr>
 nnoremap <leader>j :YcmCompleter GoToDefinitionElseDeclaration<cr>
@@ -288,7 +261,8 @@ nnoremap <leader>j :YcmCompleter GoToDefinitionElseDeclaration<cr>
 " for indexer
 
 """indexer.tar.gz
-let g:indexer_ctagsCommandLineOptions="--c++-kinds=+p+l+x+c+d+e+f+g+m+n+s+t+u+v --fields=+iaSl --extra=+q"
+"let g:indexer_ctagsCommandLineOptions="--c++-kinds=+p+l+x+c+d+e+f+g+m+n+s+t+u+v --fields=+iaSl --extra=+q"
+let g:indexer_ctagsCommandLineOptions="--languages=C --c-kinds=+l+p+x --langmap=c:.c.h --fields=+lS"
 
 """ Mark
 " <leader>m : (un)color
@@ -300,7 +274,7 @@ let g:indexer_ctagsCommandLineOptions="--c++-kinds=+p+l+x+c+d+e+f+g+m+n+s+t+u+v 
 """ vimprj
 " for indexer
 
-""" global plugin settings
+"""""" global plugin settings
 function! IDE(bang)
     execute 'TagbarClose'
     execute 'NERDTreeClose'
@@ -309,12 +283,24 @@ function! IDE(bang)
         execute 'TagbarToggle'
         execute 'NERDTreeToggle'
         execute 'MBEToggle'
-        
     endif
 endfunction
 command! -bang IDE call IDE(<bang>1)
-nmap <leader>io :IDE<cr> <c-w><c-h>
+nmap <leader>io :IDE<cr> <c-h>
 nmap <leader>ic :IDE!<cr>
+
+"""""" not used
+""Bundle 'derekwyatt/vim-protodef'
+"""" vim-protodef
+"" <leader>PP : make all prototype
+"let g:protodefprotogetter='~/.vim/bundle/vim-protodef/pullproto.pl'
+"let g:disable_protodef_sorting=1
+"
+"Bundle 'octol/vim-cpp-enhanced-highlight'
+"""" vim-cpp-enhanced-highlight
+"" ex. for highlight initializer_list,
+""     add "syntax keyword cppSTLtype initializer_list" in cpp.vim
+
 
 """""" GUI Settings """"""""""""""""""""""""""""""""""""
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -325,3 +311,9 @@ end
 if has("gui_macvim")
     let macvim_hig_shift_movement = 1
 end
+
+
+"""""" Vim Note """"""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"install ack, ctags, cmake
+":Man <word>
