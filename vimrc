@@ -147,7 +147,7 @@ colorscheme solarized
 nmap <silent> <leader>sw :FSHere<cr>
 
 """ ctrlsf.vim
-nnoremap <leader>ss :CtrlSFQuickfix<cr>
+nnoremap <leader>ss :CtrlSF<cr>
 nnoremap <leader>so :CtrlSFOpen<cr>
 nnoremap <leader>st :CtrlSFToggle<cr>
 
@@ -263,6 +263,8 @@ nnoremap <leader>j :YcmCompleter GoToDefinitionElseDeclaration<cr>
 """indexer.tar.gz
 "let g:indexer_ctagsCommandLineOptions="--c++-kinds=+p+l+x+c+d+e+f+g+m+n+s+t+u+v --fields=+iaSl --extra=+q"
 let g:indexer_ctagsCommandLineOptions="--languages=C --c-kinds=+l+p+x --langmap=c:.c.h --fields=+lS"
+let g:indexer_dontUpdateTagsIfFileExists=1
+nmap <leader>g :IndexerRebuild<cr>
 
 """ Mark
 " <leader>m : (un)color
