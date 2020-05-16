@@ -2,44 +2,37 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""
 autocmd! bufwritepost .vimrc source %
 
-
-"""""" Vundle """"""""""""""""""""""""""""""""""""""""""
-" Help:    :h bundle
-" Install: :BundleInstall
-"          $ vim +PluginInstall +qall
-" Update:  :BundleUpdate
-" Clear:   :BundleClean(!) (auto confirm)
-" List:    :BundleList
-" Search:  :BundleSearch(!) FOO (refresh cache first)
+"""""" vim-plug """"""""""""""""""""""""""""""""""""""""
+" Install: :PlugInstall [name] [#threads]
+"          $ vim +PlugInstall +qall
+" Update:  :PlugUpdate [name] [#threads]
+" Clear:   :PlugClean[!] (auto confirm)
+" Upgrade: :PlugUpgrade (upgrade vim-plug)
+" Status:  :PlugUpgrade
+" Diff:    :PlugDiff
+" Shapshot:  :PlugSnapshot[!] [output path]
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""
-set nocompatible
-filetype off
-set rtp+=~/.vim/bundle/vundle
-call vundle#rc()
-""" let Vundle manage Vundle
-Bundle 'gmarik/vundle'
-""" Plugins
-Bundle 'altercation/vim-colors-solarized'
-Bundle 'derekwyatt/vim-fswitch'
-Bundle 'dyng/ctrlsf.vim'
-Bundle 'easymotion/vim-easymotion'
-Bundle 'fholgado/minibufexpl.vim'
-Bundle 'honza/vim-snippets'
-Bundle 'kshenoy/vim-signature'
-Bundle 'Lokaltog/vim-powerline'
-Bundle 'majutsushi/tagbar'
-Bundle 'nathanaelkane/vim-indent-guides'
-Bundle 'scrooloose/nerdtree'
-Bundle 'scrooloose/nerdcommenter'
-Bundle 'SirVer/ultisnips'
-Bundle 'Valloric/YouCompleteMe'
-Bundle 'vim-scripts/DfrankUtil'
-Bundle 'vim-scripts/indexer.tar.gz'
-Bundle 'vim-scripts/Mark'
-Bundle 'vim-scripts/vimprj'
-Bundle 'vim-utils/vim-man'
-filetype plugin indent on
-
+call plug#begin()
+Plug 'altercation/vim-colors-solarized'
+Plug 'derekwyatt/vim-fswitch'
+Plug 'dyng/ctrlsf.vim'
+Plug 'easymotion/vim-easymotion'
+Plug 'fholgado/minibufexpl.vim'
+Plug 'honza/vim-snippets'
+Plug 'kshenoy/vim-signature'
+Plug 'Lokaltog/vim-powerline'
+Plug 'majutsushi/tagbar'
+Plug 'nathanaelkane/vim-indent-guides'
+Plug 'scrooloose/nerdtree'
+Plug 'scrooloose/nerdcommenter'
+Plug 'SirVer/ultisnips'
+Plug 'vim-scripts/DfrankUtil'
+Plug 'vim-scripts/indexer.tar.gz'
+Plug 'vim-scripts/Mark'
+Plug 'vim-scripts/vimprj'
+Plug 'vim-utils/vim-man'
+Plug 'zxqfl/tabnine-vim'
+call plug#end()
 
 """""" Settings """"""""""""""""""""""""""""""""""""""""
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -226,36 +219,6 @@ let g:NERDAltDelims_c = 1
 let g:UltiSnipsExpandTrigger="<leader><tab>"
 let g:UltiSnipsJumpForwardTrigger="<leader><tab>"
 let g:UltiSnipsJumpBackwardTrigger="<leader><s-tab>"
-
-""" YouCompleteMe
-" Engine: YCM: files in buffer OR keyin '.', '->', '::'
-"         tags: need enable AND tags
-"         OmniCppComplete: include header file AND shortcut key ^x^o
-" color
-"highlight Pmenu ctermfg=2 ctermbg=3 guifg=#005f87 guibg=#EEE8D5
-"highlight PmenuSel ctermfg=2 ctermbg=3 guifg=#AFD700 guibg=#106900
-" about comment
-let g:ycm_complete_in_comments=1
-"" auto load .ycm_extra_conf.py
-let g:ycm_confirm_extra_conf=0
-let g:ycm_global_ycm_extra_conf='~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
-" enable tag engine (and tags is needed)
-let g:ycm_collect_identifiers_from_tags_files=1
-" set OmniCppComplete engine
-inoremap <leader>; <C-x><C-o>
-" show table only
-set completeopt-=preview
-" character starts YCM
-let g:ycm_min_num_of_chars_for_completion=1
-" no cache
-let g:ycm_cache_omnifunc=0
-" keyword
-let g:ycm_seed_identifiers_with_syntax=1
-" used in include or opened files
-"nnoremap <leader>jc :YcmCompleter GoToDeclaration<cr>
-"nnoremap <leader>jd :YcmCompleter GoToDefinition<cr>
-nnoremap <leader>j :YcmCompleter GoToDefinitionElseDeclaration<cr>
-" <leader>d : check pre-error msg
 
 """ DfrankUtil
 " for indexer

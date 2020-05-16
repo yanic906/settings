@@ -17,6 +17,9 @@ set_os_settings() {
     elif [ "${os_name}" == "Linux" ]; then
         echo "Use Ubuntu"
         bash_file=".bash_aliases"
+        sudo apt-get update
+        # for vim
+        sudo apt-get install -y ack-grep ctags
     else
         echo "error: Not Ubuntu or MAC"
         exit
@@ -31,9 +34,11 @@ set_vim() {
     vim_dir=".vim"
     snips_dir="${vim_dir}/UltiSnips"
     ln -s ${file_path}/vimrc ${vim_file}
-    mkdir -p ${vim_dir}/bundle
-    git clone https://github.com/gmarik/vundle.git .vim/bundle/vundle
-    vim +PluginInstall +qall
+    curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    sed -i 's/^colorscheme/\"colorscheme/g' ${file_path}/vimrc
+    vim +PlugInstall +qall
+    sed -i 's/^\"colorscheme/colorscheme/g' ${file_path}/vimrc
     ln -s ${file_path}/indexer_files ${indexer_file}
     ln -s ../${file_path}/UltiSnips ${snips_dir}
     echo "set vim: ${vim_file} ${vim_dir}/"
