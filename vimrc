@@ -71,16 +71,16 @@ nmap <silent> <leader>c :noh<cr>
 
 """ tab
 set autoindent
-set expandtab
 set tabstop=4
 set shiftwidth=4
 set softtabstop=4
+autocmd FileType python,go set expandtab
 
 """ parenthesise
 set showmatch
 inoremap ( ()<ESC>i
-inoremap { {<CR>}<ESC>O
 inoremap [ []<ESC>i
+autocmd FileType c inoremap { {<CR>}<ESC>O
 
 """ misc
 set wildmenu
@@ -110,12 +110,16 @@ nmap <silent> <leader>qc :cclose<cr>
 "      set tags+=/usr/include/sys.tags
 nmap <leader>tn :tnext<cr>
 nmap <leader>tp :tprevious<cr>
+nmap <c-\> g<c-]>
 
 """ make
 nmap <leader>x :wa<cr>:make<cr><cr>:cw<cr>
 
 """ session
 "TODO
+
+""" other
+nmap <leader>p :pwd<cr>
 
 """""" not used
 "set cursorcolumn
@@ -140,9 +144,13 @@ colorscheme solarized
 nmap <silent> <leader>sw :FSHere<cr>
 
 """ ctrlsf.vim
+let g:ctrlsf_winsize = '80%'
 nnoremap <leader>ss :CtrlSF<cr>
 nnoremap <leader>so :CtrlSFOpen<cr>
 nnoremap <leader>st :CtrlSFToggle<cr>
+nnoremap <leader>s/ :CtrlSF
+" visual select and yank then search
+nnoremap <leader>sv :CtrlSF "<C-r>""<cr>
 
 """ vim-easymotion
 " <leader><leader>w/b
@@ -206,6 +214,7 @@ let NERDTreeWinPos="right"
 let NERDTreeShowHidden=1
 let NERDTreeMinimalUI=1
 let NERDTreeAutoDeleteBuffer=1
+let NERDTreeIgnore = ['\.swp']
 
 """ nerdcommenter
 " <leader>cc : comment
@@ -225,7 +234,9 @@ let g:UltiSnipsJumpBackwardTrigger="<leader><s-tab>"
 
 """indexer.tar.gz
 "let g:indexer_ctagsCommandLineOptions="--c++-kinds=+p+l+x+c+d+e+f+g+m+n+s+t+u+v --fields=+iaSl --extra=+q"
-let g:indexer_ctagsCommandLineOptions="--languages=C --c-kinds=+l+p+x --langmap=c:.c.h --fields=+lS"
+autocmd FileType c let g:indexer_ctagsCommandLineOptions="--languages=C --c-kinds=+l+p+x --langmap=c:.c.h --fields=+lS"
+autocmd FileType python let g:indexer_ctagsCommandLineOptions="--languages=Python"
+autocmd FileType go let g:indexer_ctagsCommandLineOptions="--languages=Go"
 let g:indexer_dontUpdateTagsIfFileExists=1
 nmap <leader>g :IndexerRebuild<cr>
 
