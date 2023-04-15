@@ -39,6 +39,7 @@ set_vim() {
     sed -i 's/^colorscheme/\"colorscheme/g' ${file_path}/vimrc
     vim +PlugInstall +qall
     sed -i 's/^\"colorscheme/colorscheme/g' ${file_path}/vimrc
+    touch ${file_path}/indexer_files
     ln -s ${file_path}/indexer_files ${indexer_file}
     ln -s ../${file_path}/UltiSnips ${snips_dir}
     echo "set vim: ${vim_file} ${vim_dir}/"

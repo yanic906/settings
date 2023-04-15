@@ -5,9 +5,6 @@ Environment of my MAC OS and Ubuntu
 $ ./init.sh
 
 # TODO
-1. [MAC][bash] Check brew
-2. [ALL][Vim] Check git
-3. [ALL][Vim] Check Vim version
-4. [ALL][Vim] Update plugin when update vimrc
-5. [ALL][Vim] Process files .indexer_files and .ycm_extra_conf.py
-6. [ALL][tmux] Check tmux
+1. [MAC][bash] Check brew installation
+1. [ALL][bash] Check git/tmux/VIM installation
+4. [ALL][VIM] color / code completion / code snippets

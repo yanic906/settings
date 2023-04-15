@@ -36,7 +36,7 @@ call plug#end()
 
 """""" Settings """"""""""""""""""""""""""""""""""""""""
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""
-""" General
+""" common
 let mapleader="\\"
 syntax enable
 syntax on
@@ -45,6 +45,11 @@ set history=50
 set laststatus=2
 set ruler
 set number
+
+""" color
+colorscheme desert
+autocmd FileType c,cpp set colorcolumn=80
+highlight ColorColumn ctermbg=12 guibg=lightgrey
 
 """ cursor
 set cursorline
@@ -138,7 +143,6 @@ let g:solarized_underline=0
 let g:solarized_italic=1
 let g:solarized_contrast="normal"
 let g:solarized_visibility="normal"
-colorscheme solarized
 
 """ vim-fswitch
 nmap <silent> <leader>sw :FSHere<cr>
@@ -148,9 +152,10 @@ let g:ctrlsf_winsize = '80%'
 nnoremap <leader>ss :CtrlSF<cr>
 nnoremap <leader>so :CtrlSFOpen<cr>
 nnoremap <leader>st :CtrlSFToggle<cr>
-nnoremap <leader>s/ :CtrlSF
+nnoremap <leader>s/ :CtrlSF 
 " visual select and yank then search
 nnoremap <leader>sv :CtrlSF "<C-r>""<cr>
+let g:ctrlsf_auto_focus = { "at": "done", "duration_less_than": 10000 }
 
 """ vim-easymotion
 " <leader><leader>w/b
