@@ -25,6 +25,7 @@ set_os_settings() {
         exit
     fi
     ln -s ${file_path}/bash_settings ${bash_file}
+    mkdir -p tool/bin
     echo "set bash: ${bash_file}"
 }
 
