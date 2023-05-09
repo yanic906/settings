@@ -1,41 +1,59 @@
-"""""" Automatic reloading of .vimrc """""""""""""""""""
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""
+"      Vim Note      "
+""""""""""""""""""""""
+
+"TBD: list common use command
+
+
+""""""""""""""""""""""""
+"      VIM Plugin      "
+""""""""""""""""""""""""
+
+" automatic reloading of .vimrc
 autocmd! bufwritepost .vimrc source %
 
-"""""" vim-plug """"""""""""""""""""""""""""""""""""""""
-" Install: :PlugInstall [name] [#threads]
-"          $ vim +PlugInstall +qall
-" Update:  :PlugUpdate [name] [#threads]
-" Clear:   :PlugClean[!] (auto confirm)
-" Upgrade: :PlugUpgrade (upgrade vim-plug)
-" Status:  :PlugUpgrade
-" Diff:    :PlugDiff
-" Shapshot:  :PlugSnapshot[!] [output path]
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""" vim-plug
+" Install:  :PlugInstall [name] [#threads]
+"           $ vim +PlugInstall +qall
+" Update:   :PlugUpdate [name] [#threads]
+" Clear:    :PlugClean[!] (auto confirm)
+" Upgrade:  :PlugUpgrade (upgrade vim-plug)
+" Status:   :PlugUpgrade
+" Diff:     :PlugDiff
+" Shapshot: :PlugSnapshot[!] [output path]
+"""
 call plug#begin()
-Plug 'altercation/vim-colors-solarized'
+Plug 'airblade/vim-gitgutter'
 Plug 'derekwyatt/vim-fswitch'
 Plug 'dyng/ctrlsf.vim'
 Plug 'easymotion/vim-easymotion'
 Plug 'fholgado/minibufexpl.vim'
-Plug 'honza/vim-snippets'
+Plug 'frazrepo/vim-rainbow'
+"TBD Plug 'honza/vim-snippets'
+Plug 'itchyny/lightline.vim'
 Plug 'kshenoy/vim-signature'
-Plug 'Lokaltog/vim-powerline'
+Plug 'LunarWatcher/auto-pairs'
 Plug 'majutsushi/tagbar'
-Plug 'nathanaelkane/vim-indent-guides'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+"TBD Plug 'ryanoasis/vim-devicons'
 Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/nerdcommenter'
-Plug 'SirVer/ultisnips'
+"TBD Plug 'SirVer/ultisnips'
+"TBD Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'vim-scripts/DfrankUtil'
 Plug 'vim-scripts/indexer.tar.gz'
-Plug 'vim-scripts/Mark'
+"TBD Mark vs vim-interestingwords
+"TBD Plug 'vim-scripts/Mark'
 Plug 'vim-scripts/vimprj'
-Plug 'vim-utils/vim-man'
+Plug 'Yggdroot/LeaderF', { 'do': ':LeaderfInstallCExtension' }
 Plug 'zxqfl/tabnine-vim'
 call plug#end()
 
-"""""" Settings """"""""""""""""""""""""""""""""""""""""
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+""""""""""""""""""""""
+"      Settings      "
+""""""""""""""""""""""
+
 """ common
 let mapleader="\\"
 syntax enable
@@ -83,9 +101,6 @@ autocmd FileType python,go set expandtab
 
 """ parenthesise
 set showmatch
-inoremap ( ()<ESC>i
-inoremap [ []<ESC>i
-autocmd FileType c inoremap { {<CR>}<ESC>O
 
 """ misc
 set wildmenu
@@ -113,6 +128,7 @@ nmap <silent> <leader>qc :cclose<cr>
 "      set tags+=/usr/include/c++/4.8/stdcpp.tags
 " ex2. linux source: ctags -R --c-kinds=+l+x+p --fields=+lS -I __THROW,__nonnull -f sys.tags
 "      set tags+=/usr/include/sys.tags
+"""
 nmap <leader>tn :tnext<cr>
 nmap <leader>tp :tprevious<cr>
 nmap <c-\> g<c-]>
@@ -120,48 +136,38 @@ nmap <c-\> g<c-]>
 """ make
 nmap <leader>x :wa<cr>:make<cr><cr>:cw<cr>
 
-""" session
-"TODO
+""" session (TODO)
 
 """ other
 nmap <leader>p :pwd<cr>
 
-"""""" not used
-"set cursorcolumn
-":autocmd InsertEnter,InsertLeave * set cul!
-"set spell " z= correct, ]s next
 
+"""""""""""""""""""""""""""""
+"      Plugin Settings      "
+"""""""""""""""""""""""""""""
 
-"""""" Plugin Settings """""""""""""""""""""""""""""""""
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-""" vim-colors-solarized
-let g:solarized_termcolors=256
-let g:solarized_termtrans=1
-let g:solarized_degrade=0
-let g:solarized_bold=0
-let g:solarized_underline=0
-let g:solarized_italic=1
-let g:solarized_contrast="normal"
-let g:solarized_visibility="normal"
+""" vim-gitgutter
+set updatetime=10000
 
 """ vim-fswitch
 nmap <silent> <leader>sw :FSHere<cr>
 
 """ ctrlsf.vim
-let g:ctrlsf_winsize = '80%'
+let g:ctrlsf_winsize='80%'
 nnoremap <leader>ss :CtrlSF<cr>
 nnoremap <leader>so :CtrlSFOpen<cr>
 nnoremap <leader>st :CtrlSFToggle<cr>
 nnoremap <leader>s/ :CtrlSF 
 " visual select and yank then search
 nnoremap <leader>sv :CtrlSF "<C-r>""<cr>
-let g:ctrlsf_auto_focus = { "at": "done", "duration_less_than": 10000 }
+let g:ctrlsf_auto_focus={ "at": "done", "duration_less_than": 10000 }
 
 """ vim-easymotion
 " <leader><leader>w/b
 " <leader><leader>s/f/t
 " <leader><leader>j/k
-let g:EasyMotion_smartcase = 1
+"""
+let g:EasyMotion_smartcase=1
 map <Leader><leader>h <Plug>(easymotion-linebackward)
 map <Leader><leader>l <Plug>(easymotion-lineforward)
 map <Leader><leader>. <Plug>(easymotion-repeat)
@@ -170,8 +176,17 @@ map <Leader><leader>. <Plug>(easymotion-repeat)
 noremap <C-n> :MBEbn<cr>
 noremap <C-p> :MBEbp<cr>
 
-""" vim-snippets
+""" vim-rainbow
+let g:rainbow_active=1
+au FileType c,cpp call rainbow#load()
+
+"""TBD vim-snippets
 " for ultisnips
+
+""" lightline.vim
+let g:lightline = {
+    \ 'colorscheme': 'solarized',
+    \ }
 
 """ vim-signature
 " mx  : Toggle mark 'x' and display it in the leftmost column
@@ -197,9 +212,9 @@ noremap <C-p> :MBEbp<cr>
 " [=  : Jump to prev line having a marker of any type
 " m?  : Open location list and display markers from current buffer
 " m<BS>      : Remove all markers
+"""
 
-""" vim-powerline
-let g:Powerline_colorscheme='solarized256'
+""" auto-pairs
 
 """ tagbar
 nnoremap <Leader>b :TagbarToggle<CR>
@@ -207,11 +222,13 @@ let tagbar_left=1
 let tagbar_width=32
 let tagbar_compact=1
 
-""" vim-indent-guides
-let g:indent_guides_enable_on_vim_startup=1
-let g:indent_guides_start_level=2
-let g:indent_guides_guide_size=1
-nmap <silent> <leader>i <Plug>IndentGuidesToggle
+""" coc.nvim
+" for c/c++/object-c
+" sudo apt-get install clangd (ubuntu) / brew install llvm (mac, in /usr/local/opt/llvm/bin/clangd)
+" :CocInstall coc-clangd
+"""
+
+""" vim-devicons
 
 """ nerdtree
 let NERDTreeWinSize=32
@@ -219,23 +236,28 @@ let NERDTreeWinPos="right"
 let NERDTreeShowHidden=1
 let NERDTreeMinimalUI=1
 let NERDTreeAutoDeleteBuffer=1
-let NERDTreeIgnore = ['\.swp']
+let NERDTreeIgnore=['\.swp']
 
 """ nerdcommenter
 " <leader>cc : comment
 " <leader>cm : comment
 " <leader>cs : comment
 " <leader>cu : uncomment
-let g:NERDAltDelims_c = 1
+"""
+let g:NERDAltDelims_c=1
 
-""" ultisnips
+"""TBD ultisnips
 " Note: choosing snippets by priority
-let g:UltiSnipsExpandTrigger="<leader><tab>"
-let g:UltiSnipsJumpForwardTrigger="<leader><tab>"
-let g:UltiSnipsJumpBackwardTrigger="<leader><s-tab>"
+"""
+"let g:UltiSnipsExpandTrigger="<leader><tab>"
+"let g:UltiSnipsJumpForwardTrigger="<leader><tab>"
+"let g:UltiSnipsJumpBackwardTrigger="<leader><s-tab>"
+
+""" vim-nerdtree-syntax-highlight
 
 """ DfrankUtil
 " for indexer
+"""
 
 """indexer.tar.gz
 "let g:indexer_ctagsCommandLineOptions="--c++-kinds=+p+l+x+c+d+e+f+g+m+n+s+t+u+v --fields=+iaSl --extra=+q"
@@ -245,15 +267,24 @@ autocmd FileType go let g:indexer_ctagsCommandLineOptions="--languages=Go"
 let g:indexer_dontUpdateTagsIfFileExists=1
 nmap <leader>g :IndexerRebuild<cr>
 
-""" Mark
+"""TBD Mark
 " <leader>m : (un)color
 " <leader>r : color exp
 " <leader>n : clear
 " <leader>* : next last mark
 " <leader>/ : next mark
+"""
 
 """ vimprj
 " for indexer
+"""
+
+""" LeaderF
+let g:Lf_ShortcutF='<leader>f'
+"let g:Lf_WorkingDirectoryMode='AF'
+"let g:Lf_RootMarkers=['.git', '.svn']
+
+""" tabnine-vim
 
 """""" global plugin settings
 function! IDE(bang)
@@ -269,32 +300,39 @@ endfunction
 command! -bang IDE call IDE(<bang>1)
 nmap <leader>io :IDE<cr> <c-h>
 nmap <leader>ic :IDE!<cr>
-
-"""""" not used
-""Bundle 'derekwyatt/vim-protodef'
-"""" vim-protodef
-"" <leader>PP : make all prototype
-"let g:protodefprotogetter='~/.vim/bundle/vim-protodef/pullproto.pl'
-"let g:disable_protodef_sorting=1
-"
-"Bundle 'octol/vim-cpp-enhanced-highlight'
-"""" vim-cpp-enhanced-highlight
-"" ex. for highlight initializer_list,
-""     add "syntax keyword cppSTLtype initializer_list" in cpp.vim
+autocmd FileType c,cpp :IDE
 
 
-"""""" GUI Settings """"""""""""""""""""""""""""""""""""
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""
+"      GUI Settings      "
+""""""""""""""""""""""""""
 if has("gui_running")
     set guifont=Monaco:h14
     set t_Co=256
 end
 if has("gui_macvim")
-    let macvim_hig_shift_movement = 1
+    let macvim_hig_shift_movement=1
 end
 
 
-"""""" Vim Note """"""""""""""""""""""""""""""""""""""""
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"install ack, ctags, cmake
-":Man <word>
+""""""""""""""""""
+"      Misc      "
+""""""""""""""""""
+
+""" Needed package
+"ack
+"ctags
+"cmake
+
+""" Setting backup
+"set cursorcolumn
+":autocmd InsertEnter,InsertLeave * set cul!
+"set spell " z= correct, ]s next
+"inoremap ( ()<ESC>i
+"inoremap [ []<ESC>i
+"autocmd FileType c inoremap { {<CR>}<ESC>O
+
+""" Plug-in backup
+"wilder.nvim(wildmenu)
+"vim-man(check c manual)
+"vim-indent-guides (indent line)
