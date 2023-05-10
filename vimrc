@@ -28,22 +28,20 @@ Plug 'derekwyatt/vim-fswitch'
 Plug 'dyng/ctrlsf.vim'
 Plug 'easymotion/vim-easymotion'
 Plug 'fholgado/minibufexpl.vim'
-Plug 'frazrepo/vim-rainbow'
-"TBD Plug 'honza/vim-snippets'
+Plug 'honza/vim-snippets'
 Plug 'itchyny/lightline.vim'
 Plug 'kshenoy/vim-signature'
 Plug 'LunarWatcher/auto-pairs'
 Plug 'majutsushi/tagbar'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-"TBD Plug 'ryanoasis/vim-devicons'
+Plug 'ryanoasis/vim-devicons'
 Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/nerdcommenter'
-"TBD Plug 'SirVer/ultisnips'
-"TBD Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+Plug 'SirVer/ultisnips'
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'vim-scripts/DfrankUtil'
 Plug 'vim-scripts/indexer.tar.gz'
-"TBD Mark vs vim-interestingwords
-"TBD Plug 'vim-scripts/Mark'
+Plug 'vim-scripts/Mark'
 Plug 'vim-scripts/vimprj'
 Plug 'Yggdroot/LeaderF', { 'do': ':LeaderfInstallCExtension' }
 Plug 'zxqfl/tabnine-vim'
@@ -136,8 +134,6 @@ nmap <c-\> g<c-]>
 """ make
 nmap <leader>x :wa<cr>:make<cr><cr>:cw<cr>
 
-""" session (TODO)
-
 """ other
 nmap <leader>p :pwd<cr>
 
@@ -161,6 +157,11 @@ nnoremap <leader>s/ :CtrlSF
 " visual select and yank then search
 nnoremap <leader>sv :CtrlSF "<C-r>""<cr>
 let g:ctrlsf_auto_focus={ "at": "done", "duration_less_than": 10000 }
+" remove ignore search for some folders in .gitignore
+let g:ctrlsf_extra_backend_args = {
+    \ 'rg': '-uuu',
+    \ 'ag': '-U',
+    \ }
 
 """ vim-easymotion
 " <leader><leader>w/b
@@ -176,12 +177,9 @@ map <Leader><leader>. <Plug>(easymotion-repeat)
 noremap <C-n> :MBEbn<cr>
 noremap <C-p> :MBEbp<cr>
 
-""" vim-rainbow
-let g:rainbow_active=1
-au FileType c,cpp call rainbow#load()
-
-"""TBD vim-snippets
+""" vim-snippets
 " for ultisnips
+"""
 
 """ lightline.vim
 let g:lightline = {
@@ -246,12 +244,12 @@ let NERDTreeIgnore=['\.swp']
 """
 let g:NERDAltDelims_c=1
 
-"""TBD ultisnips
+""" ultisnips
 " Note: choosing snippets by priority
 """
-"let g:UltiSnipsExpandTrigger="<leader><tab>"
-"let g:UltiSnipsJumpForwardTrigger="<leader><tab>"
-"let g:UltiSnipsJumpBackwardTrigger="<leader><s-tab>"
+let g:UltiSnipsExpandTrigger="<leader><tab>"
+let g:UltiSnipsJumpForwardTrigger="<leader><tab>"
+let g:UltiSnipsJumpBackwardTrigger="<leader><s-tab>"
 
 """ vim-nerdtree-syntax-highlight
 
@@ -260,14 +258,14 @@ let g:NERDAltDelims_c=1
 """
 
 """indexer.tar.gz
-"let g:indexer_ctagsCommandLineOptions="--c++-kinds=+p+l+x+c+d+e+f+g+m+n+s+t+u+v --fields=+iaSl --extra=+q"
+"TBD let g:indexer_ctagsCommandLineOptions="--c++-kinds=+p+l+x+c+d+e+f+g+m+n+s+t+u+v --fields=+iaSl --extra=+q"
 autocmd FileType c let g:indexer_ctagsCommandLineOptions="--languages=C --c-kinds=+l+p+x --langmap=c:.c.h --fields=+lS"
 autocmd FileType python let g:indexer_ctagsCommandLineOptions="--languages=Python"
 autocmd FileType go let g:indexer_ctagsCommandLineOptions="--languages=Go"
 let g:indexer_dontUpdateTagsIfFileExists=1
 nmap <leader>g :IndexerRebuild<cr>
 
-"""TBD Mark
+""" Mark
 " <leader>m : (un)color
 " <leader>r : color exp
 " <leader>n : clear
@@ -295,17 +293,19 @@ function! IDE(bang)
         execute 'TagbarToggle'
         execute 'NERDTreeToggle'
         execute 'MBEToggle'
+        wincmd h
     endif
 endfunction
 command! -bang IDE call IDE(<bang>1)
-nmap <leader>io :IDE<cr> <c-h>
+nmap <leader>io :IDE<cr>
 nmap <leader>ic :IDE!<cr>
-autocmd FileType c,cpp :IDE
+autocmd VimEnter *.[ch] :IDE
 
 
 """"""""""""""""""""""""""
 "      GUI Settings      "
 """"""""""""""""""""""""""
+"TBD
 if has("gui_running")
     set guifont=Monaco:h14
     set t_Co=256
@@ -319,20 +319,25 @@ end
 "      Misc      "
 """"""""""""""""""
 
-""" Needed package
-"ack
-"ctags
-"cmake
+""" Useful command
+":echo VARIABLE
+":mksession
+":normal KEY
+
+""" Needed packages
+"ack, cland, cmake, ctags, nerd-fonts, node
 
 """ Setting backup
-"set cursorcolumn
 ":autocmd InsertEnter,InsertLeave * set cul!
 "set spell " z= correct, ]s next
 "inoremap ( ()<ESC>i
 "inoremap [ []<ESC>i
 "autocmd FileType c inoremap { {<CR>}<ESC>O
 
-""" Plug-in backup
-"wilder.nvim(wildmenu)
+""" Plug-in may be used
+"wilder.nvim (wildmenu)
+"ctrlp (fuzzy search)
 "vim-man(check c manual)
 "vim-indent-guides (indent line)
+"luochen1990/rainbow (rainbow parentheses)
+"vim-syntastic/syntastic (syntax check)
