@@ -2,7 +2,7 @@
 "      Vim Note      "
 """"""""""""""""""""""
 
-"TBD: list common use command
+"TBD: list common usage
 
 
 """"""""""""""""""""""""
@@ -44,7 +44,6 @@ Plug 'vim-scripts/indexer.tar.gz'
 Plug 'vim-scripts/Mark'
 Plug 'vim-scripts/vimprj'
 Plug 'Yggdroot/LeaderF', { 'do': ':LeaderfInstallCExtension' }
-Plug 'zxqfl/tabnine-vim'
 call plug#end()
 
 
@@ -54,6 +53,7 @@ call plug#end()
 
 """ common
 let mapleader="\\"
+filetype on
 syntax enable
 syntax on
 set background=dark
@@ -63,6 +63,7 @@ set ruler
 set number
 
 """ color
+set t_Co=256
 colorscheme desert
 autocmd FileType c,cpp set colorcolumn=80
 highlight ColorColumn ctermbg=12 guibg=lightgrey
@@ -99,6 +100,7 @@ autocmd FileType python,go set expandtab
 
 """ parenthesise
 set showmatch
+highlight MatchParen ctermbg=cyan guibg=cyan
 
 """ misc
 set wildmenu
@@ -114,25 +116,16 @@ nnoremap <c-h> <c-w><c-h>
 nnoremap <c-l> <c-w><c-l>
 
 """ quickfix
+"set makeprg=BUILD_COMMAND
 nmap <silent> <leader>qo :copen<cr>
-nmap <silent> <leader>qc :cclose<cr>
+nmap <silent> <leader>qc :cclose<cr>:wincmd b<cr>:wincmd h<cr>
+nmap <leader>x :wa<cr>:make<cr><cr>:cw<cr>
+autocmd FileType qf wincmd J
 
-""" tags & new-omni-completion
-" 1. download source code (at least header files)
-" 2. ctags (-I extended1,extended2,...) (let OmniCpp_DefaultNamespaces = ["NAMESPACE"])
-" 3. set tags+=PATH_TO_TAGS
-" ex1. c++ tags: ctags -R --c++-kinds=+l+x+p --fields=+iaSl --extra=+q --language-force=c++ -f stdcpp.tags
-"      let OmniCpp_DefaultNamespaces = ["_GLIBCXX_STD"]
-"      set tags+=/usr/include/c++/4.8/stdcpp.tags
-" ex2. linux source: ctags -R --c-kinds=+l+x+p --fields=+lS -I __THROW,__nonnull -f sys.tags
-"      set tags+=/usr/include/sys.tags
-"""
+""" tagsrch
 nmap <leader>tn :tnext<cr>
 nmap <leader>tp :tprevious<cr>
 nmap <c-\> g<c-]>
-
-""" make
-nmap <leader>x :wa<cr>:make<cr><cr>:cw<cr>
 
 """ other
 nmap <leader>p :pwd<cr>
@@ -143,7 +136,7 @@ nmap <leader>p :pwd<cr>
 """""""""""""""""""""""""""""
 
 """ vim-gitgutter
-set updatetime=10000
+set updatetime=3000
 
 """ vim-fswitch
 nmap <silent> <leader>sw :FSHere<cr>
@@ -153,10 +146,11 @@ let g:ctrlsf_winsize='80%'
 nnoremap <leader>ss :CtrlSF<cr>
 nnoremap <leader>so :CtrlSFOpen<cr>
 nnoremap <leader>st :CtrlSFToggle<cr>
-nnoremap <leader>s/ :CtrlSF 
+nnoremap <leader>s/ :CtrlSF -smartcase 
 " visual select and yank then search
 nnoremap <leader>sv :CtrlSF "<C-r>""<cr>
 let g:ctrlsf_auto_focus={ "at": "done", "duration_less_than": 10000 }
+let g:ctrlsf_case_sensitive ='yes'
 " remove ignore search for some folders in .gitignore
 let g:ctrlsf_extra_backend_args = {
     \ 'rg': '-uuu',
@@ -183,7 +177,7 @@ noremap <C-p> :MBEbp<cr>
 
 """ lightline.vim
 let g:lightline = {
-    \ 'colorscheme': 'solarized',
+    \ 'colorscheme': 'Tomorrow',
     \ }
 
 """ vim-signature
@@ -221,9 +215,10 @@ let tagbar_width=32
 let tagbar_compact=1
 
 """ coc.nvim
-" for c/c++/object-c
-" sudo apt-get install clangd (ubuntu) / brew install llvm (mac, in /usr/local/opt/llvm/bin/clangd)
-" :CocInstall coc-clangd
+" - for c/c++/object-c
+" - in ubuntu: apt-get install clangd
+"   in mac: brew install llvm (in /usr/local/opt/llvm/bin/clangd)
+" - install in vim: :CocInstall coc-clangd
 """
 
 """ vim-devicons
@@ -245,7 +240,7 @@ let NERDTreeIgnore=['\.swp']
 let g:NERDAltDelims_c=1
 
 """ ultisnips
-" Note: choosing snippets by priority
+" - choosing snippets by priority
 """
 let g:UltiSnipsExpandTrigger="<leader><tab>"
 let g:UltiSnipsJumpForwardTrigger="<leader><tab>"
@@ -258,10 +253,10 @@ let g:UltiSnipsJumpBackwardTrigger="<leader><s-tab>"
 """
 
 """indexer.tar.gz
-"TBD let g:indexer_ctagsCommandLineOptions="--c++-kinds=+p+l+x+c+d+e+f+g+m+n+s+t+u+v --fields=+iaSl --extra=+q"
-autocmd FileType c let g:indexer_ctagsCommandLineOptions="--languages=C --c-kinds=+l+p+x --langmap=c:.c.h --fields=+lS"
-autocmd FileType python let g:indexer_ctagsCommandLineOptions="--languages=Python"
-autocmd FileType go let g:indexer_ctagsCommandLineOptions="--languages=Go"
+" - ctags can use --list-* (eg. --list-kinds --list-fields) to list options
+" - set global variable (eg. g:indexer_ctagsCommandLineOptions) in "autocmd FileType" is invalid
+"""
+let g:indexer_ctagsCommandLineOptions="--langmap=c:+.h --c-kinds=+lpx --fields=+iaS --extra=+q"
 let g:indexer_dontUpdateTagsIfFileExists=1
 nmap <leader>g :IndexerRebuild<cr>
 
@@ -282,33 +277,36 @@ let g:Lf_ShortcutF='<leader>f'
 "let g:Lf_WorkingDirectoryMode='AF'
 "let g:Lf_RootMarkers=['.git', '.svn']
 
-""" tabnine-vim
-
 """""" global plugin settings
 function! IDE(bang)
     execute 'TagbarClose'
     execute 'NERDTreeClose'
-    execute 'MBEClose'
     if (a:bang)
+        execute 'MBEClose'
         execute 'TagbarToggle'
         execute 'NERDTreeToggle'
-        execute 'MBEToggle'
+        execute 'MBEOpen'
         wincmd h
     endif
 endfunction
 command! -bang IDE call IDE(<bang>1)
 nmap <leader>io :IDE<cr>
 nmap <leader>ic :IDE!<cr>
-autocmd VimEnter *.[ch] :IDE
+
+function! Init_IDE()
+    execute 'TagbarToggle'
+    execute 'NERDTreeToggle'
+    wincmd h
+endfunction
+" use silent to disable warning of nerdtree
+autocmd VimEnter *.[ch] silent call Init_IDE()
 
 
 """"""""""""""""""""""""""
 "      GUI Settings      "
 """"""""""""""""""""""""""
-"TBD
 if has("gui_running")
     set guifont=Monaco:h14
-    set t_Co=256
 end
 if has("gui_macvim")
     let macvim_hig_shift_movement=1
@@ -320,12 +318,14 @@ end
 """"""""""""""""""
 
 """ Useful command
-":echo VARIABLE
+":echo VARIABLE " get value of VARIABLE
+":set ENV? " get value of ENV
 ":mksession
 ":normal KEY
+": colorscheme <c-d> " list colorscheme
 
 """ Needed packages
-"ack, cland, cmake, ctags, nerd-fonts, node
+"ack, clangd, cmake, ctags, nerd-fonts, node
 
 """ Setting backup
 ":autocmd InsertEnter,InsertLeave * set cul!
@@ -335,9 +335,10 @@ end
 "autocmd FileType c inoremap { {<CR>}<ESC>O
 
 """ Plug-in may be used
-"wilder.nvim (wildmenu)
-"ctrlp (fuzzy search)
-"vim-man(check c manual)
-"vim-indent-guides (indent line)
+"gelguy/wilder.nvim (wildmenu)
+"kien/ctrlp (fuzzy search)
+"vim-utils/vim-man(check c manual)
+"preservim/vim-indent-guides (indent line)
 "luochen1990/rainbow (rainbow parentheses)
 "vim-syntastic/syntastic (syntax check)
+"zxqfl/tabnine-vim (AI completion, need to bind YCM, coc, or etc)
