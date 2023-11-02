@@ -39,6 +39,7 @@ Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/nerdcommenter'
 Plug 'SirVer/ultisnips'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+Plug 'tpope/vim-fugitive'
 Plug 'vim-scripts/DfrankUtil'
 Plug 'vim-scripts/indexer.tar.gz'
 Plug 'vim-scripts/Mark'
@@ -52,8 +53,8 @@ call plug#end()
 """"""""""""""""""""""
 
 """ common
-let mapleader="\\"
-filetype on
+" default leader key is '\'
+nmap <space> <leader>
 syntax enable
 syntax on
 set background=dark
@@ -67,6 +68,7 @@ set t_Co=256
 colorscheme desert
 autocmd FileType c,cpp set colorcolumn=80
 highlight ColorColumn ctermbg=12 guibg=lightgrey
+highlight DiffText cterm=bold ctermfg=15 ctermbg=1 gui=none guifg=bg guibg=Red
 
 """ cursor
 set cursorline
@@ -96,9 +98,9 @@ set autoindent
 set tabstop=4
 set shiftwidth=4
 set softtabstop=4
-autocmd FileType python,go set expandtab
+autocmd FileType c,cpp,python,go set expandtab
 
-""" parenthesise
+""" parentheses
 set showmatch
 highlight MatchParen ctermbg=cyan guibg=cyan
 
@@ -114,6 +116,7 @@ nnoremap <c-j> <c-w><c-j>
 nnoremap <c-k> <c-w><c-k>
 nnoremap <c-h> <c-w><c-h>
 nnoremap <c-l> <c-w><c-l>
+set nostartofline
 
 """ quickfix
 "set makeprg=BUILD_COMMAND
@@ -127,8 +130,14 @@ nmap <leader>tn :tnext<cr>
 nmap <leader>tp :tprevious<cr>
 nmap <c-\> g<c-]>
 
+""" spell
+setlocal spell
+setlocal spelllang=en_us
+
 """ other
 nmap <leader>p :pwd<cr>
+nmap <leader>w :wq<cr>
+nmap <leader>z :qa<cr>
 
 
 """""""""""""""""""""""""""""
@@ -178,7 +187,13 @@ noremap <C-p> :MBEbp<cr>
 """ lightline.vim
 let g:lightline = {
     \ 'colorscheme': 'Tomorrow',
+	\ 'component_function': {
+    \     'filename': 'FullpathForLightline'
+	\ },
     \ }
+function! FullpathForLightline()
+	return expand('%')
+endfunction
 
 """ vim-signature
 " mx  : Toggle mark 'x' and display it in the leftmost column
@@ -213,6 +228,7 @@ nnoremap <Leader>b :TagbarToggle<CR>
 let tagbar_left=1
 let tagbar_width=32
 let tagbar_compact=1
+let tagbar_sort=0
 
 """ coc.nvim
 " - for c/c++/object-c
@@ -248,6 +264,8 @@ let g:UltiSnipsJumpBackwardTrigger="<leader><s-tab>"
 
 """ vim-nerdtree-syntax-highlight
 
+""" vim-fugitive
+
 """ DfrankUtil
 " for indexer
 """
@@ -256,7 +274,7 @@ let g:UltiSnipsJumpBackwardTrigger="<leader><s-tab>"
 " - ctags can use --list-* (eg. --list-kinds --list-fields) to list options
 " - set global variable (eg. g:indexer_ctagsCommandLineOptions) in "autocmd FileType" is invalid
 """
-let g:indexer_ctagsCommandLineOptions="--langmap=c:+.h --c-kinds=+lpx --fields=+iaS --extra=+q"
+let g:indexer_ctagsCommandLineOptions="--langmap=c:+.h --c-kinds=+lpx --fields=+iaS --extras=+q"
 let g:indexer_dontUpdateTagsIfFileExists=1
 nmap <leader>g :IndexerRebuild<cr>
 
@@ -290,8 +308,8 @@ function! IDE(bang)
     endif
 endfunction
 command! -bang IDE call IDE(<bang>1)
-nmap <leader>io :IDE<cr>
-nmap <leader>ic :IDE!<cr>
+nmap <leader>io :set nu<cr>:IDE<cr>
+nmap <leader>ic :IDE!<cr>:set nonu<cr>
 
 function! Init_IDE()
     execute 'TagbarToggle'
