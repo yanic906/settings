@@ -39,6 +39,7 @@ Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/nerdcommenter'
 Plug 'SirVer/ultisnips'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+Plug 'tpope/vim-fugitive'
 Plug 'vim-scripts/DfrankUtil'
 Plug 'vim-scripts/indexer.tar.gz'
 Plug 'vim-scripts/Mark'
@@ -52,7 +53,8 @@ call plug#end()
 """"""""""""""""""""""
 
 """ common
-let mapleader="\\"
+" default leader key is '\'
+nmap <space> <leader>
 filetype on
 syntax enable
 syntax on
@@ -67,6 +69,7 @@ set t_Co=256
 colorscheme desert
 autocmd FileType c,cpp set colorcolumn=80
 highlight ColorColumn ctermbg=12 guibg=lightgrey
+highlight DiffText cterm=bold ctermfg=15 ctermbg=1 gui=none guifg=bg guibg=Red
 
 """ cursor
 set cursorline
@@ -114,6 +117,7 @@ nnoremap <c-j> <c-w><c-j>
 nnoremap <c-k> <c-w><c-k>
 nnoremap <c-h> <c-w><c-h>
 nnoremap <c-l> <c-w><c-l>
+set nostartofline
 
 """ quickfix
 "set makeprg=BUILD_COMMAND
@@ -129,6 +133,8 @@ nmap <c-\> g<c-]>
 
 """ other
 nmap <leader>p :pwd<cr>
+nmap <leader>w :wq<cr>
+nmap <leader>z :qa<cr>
 
 
 """""""""""""""""""""""""""""
@@ -178,7 +184,13 @@ noremap <C-p> :MBEbp<cr>
 """ lightline.vim
 let g:lightline = {
     \ 'colorscheme': 'Tomorrow',
+	\ 'component_function': {
+    \     'filename': 'FullpathForLightline'
+	\ },
     \ }
+function! FullpathForLightline()
+	return expand('%')
+endfunction
 
 """ vim-signature
 " mx  : Toggle mark 'x' and display it in the leftmost column
@@ -213,6 +225,7 @@ nnoremap <Leader>b :TagbarToggle<CR>
 let tagbar_left=1
 let tagbar_width=32
 let tagbar_compact=1
+let tagbar_sort=0
 
 """ coc.nvim
 " - for c/c++/object-c
@@ -247,6 +260,8 @@ let g:UltiSnipsJumpForwardTrigger="<leader><tab>"
 let g:UltiSnipsJumpBackwardTrigger="<leader><s-tab>"
 
 """ vim-nerdtree-syntax-highlight
+
+""" vim-fugitive
 
 """ DfrankUtil
 " for indexer
