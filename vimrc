@@ -2,15 +2,30 @@
 "      Vim Note      "
 """"""""""""""""""""""
 
-"TBD: list common usage
+""" Useful command
+" :help                "show help index, jump/return by tag
+" :help quickref       "show quick reference
+" :help reference_toc  "show detail
+" :help index          "show command index
+" :map                 "show all map key
+" :echo VARIABLE       "show vaue of VARIABLE
+" :set ENV?            "show value of ENV (the same as ':echo &ENV')
+" :colorscheme <c-d>   "list colorscheme
+"
+" $vim --startuptime LOG FILE " profiling open time
+"
 
 
 """"""""""""""""""""""""
 "      VIM Plugin      "
 """"""""""""""""""""""""
 
+"TBD (not exactly)
+""" Needed packages
+" - ack, clangd, cmake, ctags, node
+
 " automatic reloading of .vimrc
-autocmd! bufwritepost .vimrc source %
+autocmd! bufwritepost *vimrc source %
 
 """ vim-plug
 " Install:  :PlugInstall [name] [#threads]
@@ -18,68 +33,93 @@ autocmd! bufwritepost .vimrc source %
 " Update:   :PlugUpdate [name] [#threads]
 " Clear:    :PlugClean[!] (auto confirm)
 " Upgrade:  :PlugUpgrade (upgrade vim-plug)
-" Status:   :PlugUpgrade
+" Status:   :PlugStatus
 " Diff:     :PlugDiff
 " Shapshot: :PlugSnapshot[!] [output path]
-"""
+"
 call plug#begin()
 Plug 'airblade/vim-gitgutter'
 Plug 'derekwyatt/vim-fswitch'
+Plug 'dense-analysis/ale'
 Plug 'dyng/ctrlsf.vim'
 Plug 'easymotion/vim-easymotion'
-Plug 'fholgado/minibufexpl.vim'
+Plug 'godlygeek/tabular'
 Plug 'honza/vim-snippets'
-Plug 'itchyny/lightline.vim'
 Plug 'kshenoy/vim-signature'
 Plug 'LunarWatcher/auto-pairs'
 Plug 'majutsushi/tagbar'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'ryanoasis/vim-devicons'
 Plug 'scrooloose/nerdtree'
-Plug 'scrooloose/nerdcommenter'
 Plug 'SirVer/ultisnips'
-Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 Plug 'vim-scripts/DfrankUtil'
 Plug 'vim-scripts/indexer.tar.gz'
-Plug 'vim-scripts/Mark'
 Plug 'vim-scripts/vimprj'
+Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'Yggdroot/LeaderF', { 'do': ':LeaderfInstallCExtension' }
 call plug#end()
+
+""" packadd
+"
+packadd editorconfig
 
 
 """"""""""""""""""""""
 "      Settings      "
 """"""""""""""""""""""
 
-""" common
-" default leader key is '\'
+" leader key (default is '\')
 nmap <space> <leader>
+
+""" common
+"
 syntax enable
 syntax on
-set background=dark
 set history=50
 set laststatus=2
 set ruler
 set number
+set relativenumber
+set numberwidth=6
+set timeout
+set scrolloff=0 "keep line(s) in H or L
+set wildmenu
+set showcmd
+set fixendofline
+set updatetime=3000 "some plugins also use this time to do update
+nnoremap <silent> <leader>p :echo 'Directory:' \|
+                            \echohl Directory \| echo '   ' . trim(execute('pwd')) . '/' \|
+                            \echohl None \| echo 'File:' \|
+                            \echohl ModeMsg \| echo '   ' . @% \| echohl None<cr>
 
 """ color
+"
 set t_Co=256
-colorscheme desert
+set background=dark
+colorscheme wildcharm
+highlight Search ctermbg=yellow guibg=yellow
 autocmd FileType c,cpp set colorcolumn=80
-highlight ColorColumn ctermbg=12 guibg=lightgrey
-highlight DiffText cterm=bold ctermfg=15 ctermbg=1 gui=none guifg=bg guibg=Red
+highlight ColorColumn cterm=bold ctermbg=8 guibg=lightgrey
 
 """ cursor
+"
 set cursorline
 set backspace=indent,eol,start
-set whichwrap=b,s
+set whichwrap=<,>,[,]
 
 """ line wrap
+" - use 'gj' or 'gk' to move in the line when set wrap
+"
 set wrap
-set linebreak
+set linebreak "work with breakat
+set breakindent
+set sidescroll=1 "work with nowrap
 
 """ encoding
+"
 set encoding=utf-8
 set termencoding=utf-8
 set fileencoding=utf-8
@@ -87,57 +127,112 @@ set fileencodings=utf-8,big5,latin1
 set ambiwidth=double
 
 """ search
+"
 set incsearch
 set hlsearch
 set ignorecase
 set nowrapscan
-nmap <silent> <leader>c :noh<cr>
+nnoremap <silent> <leader>/ :noh<cr>
 
 """ tab
+"
 set autoindent
 set tabstop=4
 set shiftwidth=4
 set softtabstop=4
-autocmd FileType c,cpp,python,go set expandtab
+autocmd FileType c,cpp,python,go,vim,bash set expandtab
 
 """ parentheses
+"
 set showmatch
+autocmd FileType xml,html set matchpairs=(:),{:},[:],<:>
 highlight MatchParen ctermbg=cyan guibg=cyan
 
-""" misc
-set wildmenu
-set showcmd
-
 """ folder
+"
 set nofoldenable
 
 """ window navigation
+"
+set nostartofline
 nnoremap <c-j> <c-w><c-j>
 nnoremap <c-k> <c-w><c-k>
 nnoremap <c-h> <c-w><c-h>
 nnoremap <c-l> <c-w><c-l>
-set nostartofline
 
-""" quickfix
-"set makeprg=BUILD_COMMAND
-nmap <silent> <leader>qo :copen<cr>
-nmap <silent> <leader>qc :cclose<cr>:wincmd b<cr>:wincmd h<cr>
-nmap <leader>x :wa<cr>:make<cr><cr>:cw<cr>
-autocmd FileType qf wincmd J
+""" buffer
+"
+set nohidden
+nnoremap <silent> <c-n> :bnext<cr>
+nnoremap <silent> <c-p> :bprevious<cr>
+nnoremap <silent> <leader>ba :bfirst<cr>
+nnoremap <silent> <leader>bz :blast<cr>
+nnoremap <silent> <leader>bl :buffers<cr>
+nnoremap <leader>bb :buffer<space>
+nnoremap <leader>bw :bwipe<space>
+nmap <silent> <leader>bf <c-w>_
 
 """ tagsrch
-nmap <leader>tn :tnext<cr>
-nmap <leader>tp :tprevious<cr>
+"
+nnoremap <silent> <leader>tn :tnext<cr>
+nnoremap <silent> <leader>tp :tprevious<cr>
 nmap <c-\> g<c-]>
 
 """ spell
-setlocal spell
-setlocal spelllang=en_us
+" - use 'z=' correct, ']s' next
+"
+autocmd FileType text set spell
+set spelllang=en_us
 
-""" other
-nmap <leader>p :pwd<cr>
-nmap <leader>w :wq<cr>
-nmap <leader>z :qa<cr>
+""" :make [args]
+" - default makeprg file name: 'makeprg'
+" - lcd root_dir when enter buffer
+" - equal to :!{makeprg} "with quickfix
+"            :!{makeprg} {shellpipe} {makeef} "without quickfix
+"
+function! Customize_make()
+    " set makeprg name
+    if exists("b:makeprg_name") == 0
+        let b:makeprg_name = 'makeprg'
+    endif
+    let makeprg_file = b:makeprg_name . '.sh'
+    let makeprg_log = b:makeprg_name . '.log'
+
+    " get roo_dir then lcd
+    let root_file = findfile(l:makeprg_file, expand('%:p:h').';')
+    if strlen(l:root_file) == 0
+        return
+    endif
+    let root_dir = fnamemodify(l:root_file, ':p:h')
+    execute 'lcd ' . l:root_dir
+
+    " set related make variables
+    execute 'set makeprg=./' . l:makeprg_file . '\ $*'
+    set shellpipe=2>&1\|\ tee
+    execute 'set makeef=' . l:makeprg_log
+
+    nmap <silent> <leader>m :w<cr>:make<cr><cr>:cwindow<cr>
+endfunction
+autocmd BufEnter * if empty(&buftype) | call Customize_make() | endif
+
+""" quickfix
+"
+nnoremap <silent> <leader>co :copen<cr>
+nnoremap <silent> <leader>cc :cclose<cr>:wincmd b<cr>:wincmd h<cr>
+autocmd FileType qf wincmd J
+autocmd FileType qf syntax match ErrMsg "error:" |
+                   \highlight ErrMsg cterm=bold ctermbg=red
+autocmd FileType qf syntax match WarnMsg "warning:" |
+                   \highlight WarnMsg cterm=bold ctermbg=yellow
+
+""" help
+"
+nnoremap <leader>h :help<space>
+
+""" save and quit
+"
+nnoremap <silent> <leader>w :w<cr>
+nnoremap <silent> <expr> <leader>q empty(&buftype) ? ':qa<cr>' : ':q<cr>'
 
 
 """""""""""""""""""""""""""""
@@ -145,19 +240,34 @@ nmap <leader>z :qa<cr>
 """""""""""""""""""""""""""""
 
 """ vim-gitgutter
-set updatetime=3000
+" - it influences colorscheme (e.g. .patch shows different colors)
+"
+let g:gitgutter_map_keys=0
+highlight SignColumn cterm=bold ctermbg=0 guibg=black
 
 """ vim-fswitch
-nmap <silent> <leader>sw :FSHere<cr>
+"
+nnoremap <silent> <leader>sw :FSHere<cr>
+
+""" ale
+" :ALEInfo "show all configs
+" - can work with vim-airline
+"
+let g:ale_enabled=0 "default disable
+nmap <leader>ap <Plug>(ale_previous_wrap)
+nmap <leader>an <Plug>(ale_next_wrap)
+nmap <leader>at :ALEToggle<cr>
+nmap <leader>ai :ALEDetail<cr>
 
 """ ctrlsf.vim
+"
 let g:ctrlsf_winsize='80%'
-nnoremap <leader>ss :CtrlSF<cr>
-nnoremap <leader>so :CtrlSFOpen<cr>
-nnoremap <leader>st :CtrlSFToggle<cr>
-nnoremap <leader>s/ :CtrlSF -smartcase 
+nnoremap <silent> <leader>ss :CtrlSF<cr>
+nnoremap <silent> <leader>so :CtrlSFOpen<cr>
+nnoremap <silent> <leader>st :CtrlSFToggle<cr>
+nnoremap <leader>s/ :CtrlSF -smartcase<space>
 " visual select and yank then search
-nnoremap <leader>sv :CtrlSF "<C-r>""<cr>
+nnoremap <silent> <leader>sv :CtrlSF "<c-r>""<cr>
 let g:ctrlsf_auto_focus={ "at": "done", "duration_less_than": 10000 }
 let g:ctrlsf_case_sensitive ='yes'
 " remove ignore search for some folders in .gitignore
@@ -167,33 +277,22 @@ let g:ctrlsf_extra_backend_args = {
     \ }
 
 """ vim-easymotion
-" <leader><leader>w/b
-" <leader><leader>s/f/t
-" <leader><leader>j/k
-"""
+"
 let g:EasyMotion_smartcase=1
-map <Leader><leader>h <Plug>(easymotion-linebackward)
-map <Leader><leader>l <Plug>(easymotion-lineforward)
-map <Leader><leader>. <Plug>(easymotion-repeat)
+let g:EasyMotion_do_mapping=0
+map <leader>e <Plug>(easymotion-bd-f)
+map <leader>ee <Plug>(easymotion-s2)
 
-""" minibufexpl.vim
-noremap <C-n> :MBEbn<cr>
-noremap <C-p> :MBEbp<cr>
+""" tabular
+"
+nmap <leader>t= :Tabularize /=<cr>
+vmap <leader>t= :Tabularize /=<cr>
+nmap <leader>t/ :Tabularize /\/\/<cr>
+vmap <leader>t/ :Tabularize /\/\/<cr>
 
 """ vim-snippets
-" for ultisnips
-"""
-
-""" lightline.vim
-let g:lightline = {
-    \ 'colorscheme': 'Tomorrow',
-	\ 'component_function': {
-    \     'filename': 'FullpathForLightline'
-	\ },
-    \ }
-function! FullpathForLightline()
-	return expand('%')
-endfunction
+" - for ultisnips
+"
 
 """ vim-signature
 " mx  : Toggle mark 'x' and display it in the leftmost column
@@ -219,12 +318,13 @@ endfunction
 " [=  : Jump to prev line having a marker of any type
 " m?  : Open location list and display markers from current buffer
 " m<BS>      : Remove all markers
-"""
+"
 
 """ auto-pairs
+"
 
 """ tagbar
-nnoremap <Leader>b :TagbarToggle<CR>
+"
 let tagbar_left=1
 let tagbar_width=32
 let tagbar_compact=1
@@ -232,84 +332,137 @@ let tagbar_sort=0
 
 """ coc.nvim
 " - for c/c++/object-c
-" - in ubuntu: apt-get install clangd
-"   in mac: brew install llvm (in /usr/local/opt/llvm/bin/clangd)
-" - install in vim: :CocInstall coc-clangd
-"""
-
-""" vim-devicons
+"   * in ubuntu: apt-get install clangd
+"     in mac: brew install llvm (in /usr/local/opt/llvm/bin/clangd)
+"   * :CocInstall coc-clangd
+"   * :CocConfig (https://github.com/neoclide/coc.nvim/wiki/Language-servers#ccobjective-c)
+" - map key (https://github.com/neoclide/coc.nvim/wiki/Completion-with-sources)
+"
+let g:coc_start_at_startup=1
+inoremap <expr> <cr> coc#pum#visible() ? coc#pum#confirm() : "\<CR>"
+inoremap <expr> <Tab> coc#pum#visible() ? coc#pum#next(1) : "\<Tab>"
+inoremap <expr> <S-Tab> coc#pum#visible() ? coc#pum#prev(1) : "\<S-Tab>"
+function! CocToggle()
+    if g:coc_enabled
+        CocDisable
+    else
+        CocEnable
+    endif
+endfunction
+nnoremap <silent> <leader>ct :call CocToggle()<cr>
 
 """ nerdtree
+"
 let NERDTreeWinSize=32
 let NERDTreeWinPos="right"
 let NERDTreeShowHidden=1
 let NERDTreeMinimalUI=1
 let NERDTreeAutoDeleteBuffer=1
-let NERDTreeIgnore=['\.swp']
-
-""" nerdcommenter
-" <leader>cc : comment
-" <leader>cm : comment
-" <leader>cs : comment
-" <leader>cu : uncomment
-"""
-let g:NERDAltDelims_c=1
+let NERDTreeIgnore=['\.swp', '\.o', '\.cmd']
 
 """ ultisnips
-" - choosing snippets by priority
-"""
-let g:UltiSnipsExpandTrigger="<leader><tab>"
-let g:UltiSnipsJumpForwardTrigger="<leader><tab>"
-let g:UltiSnipsJumpBackwardTrigger="<leader><s-tab>"
+" - choose snippets by priority
+"
+let g:UltiSnipsExpandTrigger="<c-l>"
+let g:UltiSnipsJumpForwardTrigger="<c-j>"
+let g:UltiSnipsJumpBackwardTrigger="<c-k>"
 
-""" vim-nerdtree-syntax-highlight
+""" vim-commentary
+" gcc           "comment this line
+" [NUM]gc[MOVE] "comment others line
+"
 
 """ vim-fugitive
+" :Git <git command>
+"
+nnoremap <leader>g :Git<space>
+" for git diff
+highlight DiffDelete cterm=bold ctermfg=9
+highlight DiffAdd cterm=bold ctermfg=10
+
+""" vim-airline
+" - can use the AirlineAfterTheme autocmd to update highlights without affecting the airline theme
+" - to show absolute path in g:airline_section_c, modify %f to %F in airline#extensions#fugitiveline#bufname()
+"
+let g:airline_powerline_fonts=1
+let g:airline_skip_empty_sections=0
+let g:airline_detect_spell=0
+let g:airline_stl_path_style='default'
+if !exists('g:airline_symbols')
+    let g:airline_symbols={}
+endif
+let g:airline_symbols.readonly='[RO]'
+let g:airline_symbols.branch=''
+let g:airline_symbols.linenr=' L:'
+let g:airline_symbols.maxlinenr=', '
+let g:airline_symbols.colnr=' C:'
+let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]' "skip the most common show
+let g:airline#extensions#ale#enabled=1 "with ale
+let g:airline#extensions#branch#enabled=1 "with vim-fugitive
+let g:airline#extensions#coc#enabled=1 "for coc.nvim
+let g:airline#extensions#tabline#enabled=1
+let g:airline#extensions#tabline#formatter='default'
+let g:airline#extensions#tabline#buffer_nr_show=1
+let g:airline#extensions#tabline#buffer_nr_format='%s.'
+let g:airline#extensions#tagbar#enabled=0
+let g:airline#extensions#tagbar_statusline=0
+let g:airline#extensions#nerdtree_statusline=0
+
+""" vim-airline-themes
+" - for vim-airline
+"
+let g:airline_theme='papercolor'
 
 """ DfrankUtil
-" for indexer
-"""
+" - for indexer
+"
 
 """indexer.tar.gz
 " - ctags can use --list-* (eg. --list-kinds --list-fields) to list options
 " - set global variable (eg. g:indexer_ctagsCommandLineOptions) in "autocmd FileType" is invalid
-"""
+"
 let g:indexer_ctagsCommandLineOptions="--langmap=c:+.h --c-kinds=+lpx --fields=+iaS --extras=+q"
 let g:indexer_dontUpdateTagsIfFileExists=1
-nmap <leader>g :IndexerRebuild<cr>
-
-""" Mark
-" <leader>m : (un)color
-" <leader>r : color exp
-" <leader>n : clear
-" <leader>* : next last mark
-" <leader>/ : next mark
-"""
+nnoremap <leader>ib :IndexerRebuild<cr>
 
 """ vimprj
-" for indexer
-"""
+" - for indexer
+"
+
+""" nerdtree-git-plugin
+"
 
 """ LeaderF
+" :LeaderfSelf "show all commands
+"
 let g:Lf_ShortcutF='<leader>f'
-"let g:Lf_WorkingDirectoryMode='AF'
-"let g:Lf_RootMarkers=['.git', '.svn']
+let g:Lf_ShortcutB='<leader>l'
+let g:Lf_WorkingDirectoryMode='AF'
+let g:Lf_RootMarkers=['.git', '.svn', '.root']
+let g:Lf_WildIgnore={'file':['*.swp', '*.o'], 'dir':[]}
+let g:Lf_UseVersionControlTool=0 "to avoid many .git in the path
+let g:Lf_DefaultExternalTool='find'
 
-"""""" global plugin settings
+""" editorconfig
+" - https://editorconfig.org
+"
+let g:EditorConfig_exclude_patterns=['fugitive://.*']
+au FileType gitcommit let b:EditorConfig_disable=1
+
+""" global plugin settings
+"
 function! IDE(bang)
     execute 'TagbarClose'
     execute 'NERDTreeClose'
     if (a:bang)
-        execute 'MBEClose'
         execute 'TagbarToggle'
         execute 'NERDTreeToggle'
-        execute 'MBEOpen'
         wincmd h
     endif
 endfunction
 command! -bang IDE call IDE(<bang>1)
-nmap <leader>io :set nu<cr>:IDE<cr>
-nmap <leader>ic :IDE!<cr>:set nonu<cr>
+nnoremap <silent> <leader>io :GitGutterEnable<cr>:set nu<cr>:set rnu<cr>:IDE<cr>
+nnoremap <silent> <leader>ic :IDE!<cr>:set nonu<cr>:set nornu<cr>:GitGutterDisable<cr>
 
 function! Init_IDE()
     execute 'TagbarToggle'
@@ -320,6 +473,7 @@ endfunction
 autocmd VimEnter *.[ch] silent call Init_IDE()
 
 
+"TBD (not use now)
 """"""""""""""""""""""""""
 "      GUI Settings      "
 """"""""""""""""""""""""""
@@ -329,34 +483,3 @@ end
 if has("gui_macvim")
     let macvim_hig_shift_movement=1
 end
-
-
-""""""""""""""""""
-"      Misc      "
-""""""""""""""""""
-
-""" Useful command
-":echo VARIABLE " get value of VARIABLE
-":set ENV? " get value of ENV
-":mksession
-":normal KEY
-": colorscheme <c-d> " list colorscheme
-
-""" Needed packages
-"ack, clangd, cmake, ctags, nerd-fonts, node
-
-""" Setting backup
-":autocmd InsertEnter,InsertLeave * set cul!
-"set spell " z= correct, ]s next
-"inoremap ( ()<ESC>i
-"inoremap [ []<ESC>i
-"autocmd FileType c inoremap { {<CR>}<ESC>O
-
-""" Plug-in may be used
-"gelguy/wilder.nvim (wildmenu)
-"kien/ctrlp (fuzzy search)
-"vim-utils/vim-man(check c manual)
-"preservim/vim-indent-guides (indent line)
-"luochen1990/rainbow (rainbow parentheses)
-"vim-syntastic/syntastic (syntax check)
-"zxqfl/tabnine-vim (AI completion, need to bind YCM, coc, or etc)
