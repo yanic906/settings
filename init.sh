@@ -11,9 +11,19 @@ get_relative_path() {
 }
 
 set_os_settings() {
-    if [ "${os_name}" == "Darwin" ]; then
+    if [ "${TERM_PROGRAM}" == "Apple_Terminal" ]; then
         echo "Use OS X"
         bash_file=".bash_profile"
+        # install homebrew
+        read -p "brew install done? " confirm
+        # for building vim with python3 and its plugin
+        brew install python3 node rg
+        # for building ctags
+        brew install autoconf automake pkg-config pcre2
+        # for fonts in terminal
+        brew install font-source-code-pro-for-powerline
+        # for using git and its completion
+        brew install git bash-completion
     elif [ "${os_name}" == "Linux" ]; then
         echo "Use Ubuntu"
         bash_file=".bash_aliases"

@@ -1,7 +1,36 @@
-PATH=${PATH}:${HOME}/tool/bin
-export PATH
+# set prompt
 PS1="\[\e[1;34m\]\t\[\e[m\] \[\e[0;32m\]\u@\h\[\e[m\]:\[\e[0;33m\]\w\[\e[m\]\$ "
 
+# set alias
+alias tmux="tmux -2"
+alias v="vim"
+alias vb="v -b"
+alias vn="v -u NONE"
+
+# for bash on macos
+if [ "${TERM_PROGRAM}" == "Apple_Terminal" ]; then
+    # set PATH
+    brew_dir="/opt/homebrew/bin"
+    if [ -d ${brew_dir} ]; then
+        PATH=${brew_dir}:${PATH}
+    fi
+    # set alias
+    alias ls="ls --color"
+    alias ptt="ssh bbs@ptt.cc"
+    # git autocompletion
+    if [ -f $(brew --prefix)/etc/bash_completion ]; then
+        . $(brew --prefix)/etc/bash_completion
+    fi
+fi
+
+# set PATH
+tool_dir="${HOME}/tool/bin"
+if [ -d ${tool_dir} ]; then
+    PATH=${tool_dir}:${PATH}
+fi
+export PATH
+
+# cfind command
 cfind() {
     find . -name "*.[ch]" -exec grep --color=always -nHi "$*" {} \;
 }
